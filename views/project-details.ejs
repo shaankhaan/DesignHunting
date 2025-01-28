@@ -1,0 +1,20 @@
+<!-- views/project-details.ejs -->
+<section class="project-details">
+    <h1><%= projectName %></h1>
+    <p>Here are more details about the <%= projectName %>:</p>
+    <ul>
+      <% projectData.forEach(project => { %>
+        <li>
+          <div class="project-image">
+            <img src="<%= project.image %>" alt="<%= project.title %>">
+          </div>
+          <div class="project-info">
+            <h3><%= project.title %></h3>
+            <p><%= project.description %></p>
+          </div>
+        </li>
+      <% }) %>
+    </ul>
+    <a href="/portfolio" class="back-to-portfolio">Back to Portfolio</a>
+  </section>
+  

@@ -1,0 +1,18 @@
+<main>
+<section class="about-containe">
+    <h1>About Me</h1>
+    <p><%= aboutData.description %></p>
+  
+    <ul>
+      <li><strong>Name:</strong> <%= aboutData.name %></li>
+      <li><strong>Profession:</strong> <%= aboutData.profession %></li>
+      <li><strong>Skills:</strong></li>
+      <ul>
+        <% aboutData.skills.forEach(function(skill) { %>
+          <li><%= skill %></li>
+        <% }); %>
+      </ul>
+    </ul>
+  </section>
+</main>
+  
