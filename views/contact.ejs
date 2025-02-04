@@ -1,27 +1,71 @@
-<main>
-  <section class="contact">
-    <div class="form-container">
-      <h1>Contact Me</h1>
-      <!-- Success Message Section -->
-      <% if (successMessage) { %>
-        <p style="color: green;"><%= successMessage %></p>  <!-- Display success message -->
-      <% } %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link rel="stylesheet" href="/styles/style.css">
 
-      <form action="/submit" method="POST">
-        <div>
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required />
+    <!-- Include AOS (Animate On Scroll) Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+</head>
+<body style="background-color: #f4f4f4; font-family: Arial, sans-serif; line-height: 1.5;">
+    <!-- Header Section with AOS animation -->
+    <header style="background-color: #12223D; color: white; padding: 2rem; text-align: center;" data-aos="fade-down" data-aos-duration="1000">
+        <h1>Contact Me</h1>
+        <p style=" color: #615e58;">If you have any questions or inquiries, feel free to reach out!</p>
+    </header>
+    
+    <!-- Contact Form Section with AOS animation -->
+    <section class="contact" style="background-color: #f4f4f4; padding: 3rem;">
+        <div class="form-container" style="background-color: white; padding: 2rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px; max-width: 600px; margin: 0 auto;" data-aos="fade-up" data-aos-duration="1200">
+            
+            <!-- Success & Error Messages -->
+            <% if (errorMessage) { %>
+                <p style="color: red; font-weight: bold; text-align: center;"><%= errorMessage %></p>
+            <% } %>
+            <% if (successMessage) { %>
+                <p style="color: #FFB42E; font-weight: bold; text-align: center;"><%= successMessage %></p>
+            <% } %>
+
+            <form action="/submit" method="POST">
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="name" style="color: #1E478E; font-weight: bold;">Name:</label>
+                    <input type="text" id="name" name="name" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="email" style="color: #1E478E; font-weight: bold;">Email:</label>
+                    <input type="email" id="email" name="email" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="message" style="color: #1E478E; font-weight: bold;">Message:</label>
+                    <textarea id="message" name="message" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+                </div>
+
+                <button type="submit" style="background-color: #FFB42E; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
+                    Send Message
+                </button>
+            </form>
         </div>
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
-        </div>
-        <div>
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="4" required></textarea>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  </section>
-</main>
+    </section>
+
+    <!-- Footer Section with AOS animation -->
+    <footer style="text-align: center; padding: 1rem; background-color: #12223D; color: white;" data-aos="fade-up" data-aos-duration="1500">
+        <p>&copy; 2025 My Website. All rights reserved.</p>
+    </footer>
+
+    <!-- Include AOS script -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 1000, // Animation duration
+            easing: 'ease-in-out', // Animation easing
+            once: true // Animation triggers only once
+        });
+    </script>
+</body>
+</html>

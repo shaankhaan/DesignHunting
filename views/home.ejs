@@ -1,12 +1,47 @@
-<% include("layout") %>
-<main>
-<section class="home-containe">
-  <div class="hero">
-    <img src="/images/cover.jpg" alt="Hero Image">
-    <div class="hero-text">
-      <h1>Welcome to My Portfolio</h1>
-      <p>Explore my projects and skills.</p>
-    </div>
-  </div>
-</section>
-</main>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home - <%= user.name %></title>
+        <link rel="stylesheet" href="/styles/style.css">
+        
+        <!-- Include AOS (Animate On Scroll) Library -->
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    </head>
+    
+    <body style="font-family: Arial, sans-serif; line-height: 1.5; background-color: #f4f4f4;">
+        <!-- Header Section with branding colors -->
+        <header data-aos="fade-up" style="background-color: #12223D; color: white; padding: 3rem; text-align: center;">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">Welcome to the Portfolio of <%= user.name %></h1>
+            <p style="font-size: 1.5rem; color: #615e58;"><%= user.profession %></p>
+        </header>
+    
+        <!-- Home content section -->
+        <main>
+            <section class="home-container" data-aos="zoom-in" style="padding: 4rem; background-color: white; text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px; margin-top: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                <h2 style="color: #1E478E; font-size: 2rem; margin-bottom: 1rem;">Explore My Work and Projects</h2>
+                <p style="font-size: 1.5rem; color: #2E2E2E; line-height: 1.6;">
+                    Welcome to my personal portfolio website. Feel free to explore my work, skills, and various projects that I have worked on. I’m passionate about design, development, and creating impactful experiences.
+                </p>
+            </section>
+        </main>
+    
+        <!-- Footer Section -->
+        <footer data-aos="fade-up" style="background-color: #04070D; color: white; text-align: center; padding: 1.5rem; margin-top: 3rem;">
+            <p>&copy; 2025 <%= user.name %> - All Rights Reserved</p>
+        </footer>
+    
+        <!-- Include AOS script -->
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+        <script>
+            // Initialize AOS animation library
+            AOS.init({
+                duration: 1000, // Animation duration
+                easing: 'ease-in-out', // Animation easing
+                once: true // Animation triggers only once
+            });
+        </script>
+    </body>
+    
+</html>

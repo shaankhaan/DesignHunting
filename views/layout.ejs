@@ -4,26 +4,98 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Website</title>
-  <link rel="stylesheet" href="/styles/style.css"> <!-- Update to your actual stylesheet path -->
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+      background-color: #f4f4f4; /* Light background (60%) */
+      padding-bottom: 60px;
+    }
+
+    /* Header and Navigation Styles */
+    header {
+      background-color: #12223D; /* Dark Green (30%) */
+      padding: 1rem;
+    }
+
+    nav ul {
+      list-style-type: none;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav li {
+      margin: 0 15px;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2rem; /* Larger font size */
+    }
+
+    .nav-link:hover {
+      color: #FFB42E; /* Accent Golden Yellow (10%) */
+    }
+
+    /* Main Content Section */
+    main {
+      padding: 2rem;
+      margin-top: 1rem;
+      background-color: white; /* White background (60%) */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    /* Footer Styles */
+    footer {
+      background-color: #04070D; /* Very Dark Black (30%) */
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    footer p {
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
+  <!-- Header with navigation -->
   <header>
     <nav>
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/portfolio">Portfolio</a></li>
-        <li><a href="/contact">Contact</a></li>
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/about" class="nav-link">About</a></li>
+        <li><a href="/portfolio" class="nav-link">Portfolio</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
       </ul>
     </nav>
   </header>
-  
+
+  <!-- Main content section where each page content will be inserted -->
   <main>
-    <%- body %> <!-- This is where the contact.ejs will be inserted -->
+    <%- body %> <!-- Content from different pages (home, about, etc.) will be inserted here -->
   </main>
-  
+
+  <!-- Footer section -->
   <footer>
     <p>&copy; 2025 My Website. All rights reserved.</p>
   </footer>
+
+  <!-- Add your external scripts here if needed -->
 </body>
 </html>

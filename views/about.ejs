@@ -1,18 +1,62 @@
-<main>
-<section class="about-containe">
-    <h1>About Me</h1>
-    <p><%= aboutData.description %></p>
-  
-    <ul>
-      <li><strong>Name:</strong> <%= aboutData.name %></li>
-      <li><strong>Profession:</strong> <%= aboutData.profession %></li>
-      <li><strong>Skills:</strong></li>
-      <ul>
-        <% aboutData.skills.forEach(function(skill) { %>
-          <li><%= skill %></li>
-        <% }); %>
-      </ul>
-    </ul>
-  </section>
-</main>
-  
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>About - <%= aboutData.name %></title>
+        <link rel="stylesheet" href="/styles/style.css"> <!-- Ensure the correct path -->
+    
+        <!-- Include AOS (Animate On Scroll) Library -->
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    </head>
+    
+    <body style="background-color: #F4F4F4; font-family: Arial, sans-serif; line-height: 1.5;">
+        <!-- Header section with secondary color (30%) -->
+        <header data-aos="fade-down" style="background-color: #12223D; color: white; padding: 2rem; text-align: center;">
+            <h1>About <%= aboutData.name %></h1>
+            <p style="font-size: 1.2rem; color: #615e58;">Profession: <%= aboutData.profession %></p>
+        </header>
+    
+        <!-- About content section with dominant color (60%) -->
+        <main data-aos="fade-up" style="background-color: white; padding: 3rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; margin: 2rem auto; max-width: 1200px;">
+            
+            <!-- Introduction Section -->
+            <section data-aos="fade-right" style="margin-bottom: 2rem;">
+                <h2 style="color: #1E478E;">👋 About Me</h2>
+                <p style="color: #555; font-size: 1.2rem; line-height: 1.6;">
+                    I am a passionate <strong>visual graphic designer</strong> with a love for creating <strong>clean, modern designs</strong>. 
+                    I specialize in <strong>branding, web design, and digital media</strong>, focusing on visually compelling and user-friendly experiences.
+                </p>
+            </section>
+    
+            <!-- Skills Section -->
+            <section data-aos="zoom-in" data-aos-delay="200">
+                <h2 style="color: #1E478E;">💡 Skills & Expertise</h2>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <% aboutData.skills.forEach(function(skill) { %>
+                        <li style="background-color: #F4F4F4; color: #555; font-size: 1.2rem; padding: 10px; margin-bottom: 8px; border-radius: 5px; text-align: center;">
+                            <%= skill %>
+                        </li>
+                    <% }); %>
+                </ul>
+            </section>
+    
+        </main>
+    
+        <!-- Footer section with accent color (10%) -->
+        <footer data-aos="fade-up" style="background-color: #12223D; color: white; padding: 1rem; text-align: center; margin-top: 2rem;">
+            <p>&copy; 2025 <%= aboutData.name %> | All Rights Reserved</p>
+        </footer>
+    
+        <!-- Include AOS script -->
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+        <script>
+            // Initialize AOS animation library
+            AOS.init({
+                duration: 1000, // Animation duration
+                easing: 'ease-in-out', // Animation easing
+                once: true // Animation triggers only once
+            });
+        </script>
+    </body>
+    
