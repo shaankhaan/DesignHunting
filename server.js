@@ -9,7 +9,9 @@ const compression = require('compression');
 const { MongoClient } = require("mongodb"); // MongoDB client
 
 const app = express();
+// Your middleware and routes here
 
+module.exports = app;
 // Middleware for compression (faster page load)
 app.use(compression());
 
