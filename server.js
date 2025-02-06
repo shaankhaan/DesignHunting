@@ -1,5 +1,9 @@
 require('dotenv').config();  // Load environment variables
-console.log("MongoDB URI:", process.env.MONGO_URI);  // Log the URI to confirm it's loaded
+
+// Log MongoDB URI only in development (to avoid exposing sensitive information)
+if (process.env.NODE_ENV !== 'production') {
+  console.log("MongoDB URI:", process.env.MONGO_URI);  // Log the URI to confirm it's loaded
+}
 
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
@@ -9,9 +13,6 @@ const compression = require('compression');
 const { MongoClient } = require("mongodb"); // MongoDB client
 
 const app = express();
-// Your middleware and routes here
-
-module.exports = app;
 // Middleware for compression (faster page load)
 app.use(compression());
 
@@ -25,40 +26,33 @@ app.use(express.static("public", { maxAge: '1d' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
 // EJS Layouts
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 
-// Check if MongoDB URI is correctly loaded
-if (!process.env.MONGO_URI) {
-  console.error("MongoDB URI is not defined. Please set the MONGO_URI in your .env file.");
-  process.exit(1); // Exit if the URI is not available
-}
-
-// MongoDB Connection Setup
+// MongoDB URI and client
 const uri = process.env.MONGO_URI;  // MongoDB connection string from .env file
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+// MongoDB Connection Setup
 async function connectToDatabase() {
   try {
     await client.connect();
     console.log("Connected to MongoDB Atlas!");
 
-    // Example: Connect to the 'portfolio' database
     const database = client.db("portfolio");
     const usersCollection = database.collection("users");
     const portfolioCollection = database.collection("portfolio");
     const contactCollection = database.collection("contactMessages");
 
-    // Store sample user data (just for initial setup)
+    // Check if sample user data exists and insert it if not
     const existingUser = await usersCollection.findOne({ name: "Shan Khan" });
     if (!existingUser) {
       await usersCollection.insertOne({ name: "Shan Khan", profession: "Graphic Designer" });
       console.log("Inserted sample user data.");
     }
 
-    // Store sample portfolio data (just for initial setup)
+    // Check if sample portfolio data exists and insert/update if necessary
     const existingPortfolio = await portfolioCollection.findOne({ title: "Thumbnails Projects" });
     if (!existingPortfolio) {
       await portfolioCollection.insertMany([
@@ -83,7 +77,6 @@ async function connectToDatabase() {
       ]);
       console.log("Inserted sample portfolio data.");
     } else {
-      // Update existing portfolio data if needed
       console.log("Portfolio data already exists. Updating...");
       await portfolioCollection.updateOne(
         { title: "Thumbnails Projects" },
@@ -146,8 +139,6 @@ app.get("/portfolio", async (req, res) => {
     const portfolioCollection = database.collection("portfolio");
 
     const portfolioData = await portfolioCollection.find().toArray();
-    console.log("Fetched Portfolio Data:", portfolioData); // Debugging
-
     if (!portfolioData.length) {
       return res.status(404).send("No portfolio projects found");
     }
@@ -162,26 +153,24 @@ app.get("/portfolio/:project", async (req, res) => {
   try {
       const { project } = req.params;
 
-      // Connect to the database
       const database = client.db("portfolio");
       const portfolioCollection = database.collection("portfolio");
 
-      // Fetch the project based on the 'link' field
       const projectData = await portfolioCollection.findOne({
-        link: `/portfolio/${project}`  // Use the project parameter directly to match the link
+        link: `/portfolio/${project}`
       });
 
       if (!projectData) {
           return res.status(404).send("Project not found");
       }
 
-      // Render the project details page with the fetched data
       res.render("project-details", { projectData });
   } catch (error) {
       console.error(error);
       res.status(500).send("Error fetching project details");
   }
 });
+
 // Contact Page Route
 app.get('/contact', (req, res) => {
   res.render('contact', { successMessage: null, errorMessage: null });
@@ -235,7 +224,8 @@ app.post('/submit', async (req, res) => {
   }
 });
 
-const PORT = 8081;
+// Deployment readiness: Set dynamic port for deployment environments like Vercel
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
