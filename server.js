@@ -1,4 +1,4 @@
-require("dotenv").config();  // Load environment variables
+require("dotenv").config(); // Load environment variables
 
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
@@ -27,10 +27,12 @@ app.use(bodyParser.json());
 // MongoDB Setup
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri); // ✅ Removed deprecated options
+let isDbConnected = false;
 
 async function connectToDatabase() {
   try {
     await client.connect();
+    isDbConnected = true;
     console.log("✅ Connected to MongoDB Atlas!");
 
     const database = client.db("portfolio");
@@ -81,7 +83,6 @@ async function connectToDatabase() {
     }
   } catch (err) {
     console.error("❌ MongoDB Connection Error:", err);
-    process.exit(1); // Exit on connection failure
   }
 }
 
@@ -90,6 +91,10 @@ connectToDatabase().catch(console.error);
 
 // Routes
 app.get("/", async (req, res) => {
+  if (!isDbConnected) {
+    return res.status(500).send("Database not connected");
+  }
+
   try {
     const database = client.db("portfolio");
     const usersCollection = database.collection("users");
@@ -105,6 +110,10 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/about", async (req, res) => {
+  if (!isDbConnected) {
+    return res.status(500).send("Database not connected");
+  }
+
   try {
     const database = client.db("portfolio");
     const usersCollection = database.collection("users");
@@ -125,6 +134,10 @@ app.get("/about", async (req, res) => {
 });
 
 app.get("/portfolio", async (req, res) => {
+  if (!isDbConnected) {
+    return res.status(500).send("Database not connected");
+  }
+
   try {
     const database = client.db("portfolio");
     const portfolioCollection = database.collection("portfolio");
@@ -140,6 +153,10 @@ app.get("/portfolio", async (req, res) => {
 });
 
 app.get("/portfolio/:project", async (req, res) => {
+  if (!isDbConnected) {
+    return res.status(500).send("Database not connected");
+  }
+
   try {
     const { project } = req.params;
     const database = client.db("portfolio");
