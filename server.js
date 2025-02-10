@@ -86,15 +86,19 @@ async function connectToDatabase() {
   }
 }
 
-// Connect to MongoDB
+// Try to connect to MongoDB on app start
 connectToDatabase().catch(console.error);
 
-// Routes
-app.get("/", async (req, res) => {
+// Middleware to check DB connection before each route
+function checkDbConnection(req, res, next) {
   if (!isDbConnected) {
     return res.status(500).send("Database not connected");
   }
+  next();
+}
 
+// Routes
+app.get("/", checkDbConnection, async (req, res) => {
   try {
     const database = client.db("portfolio");
     const usersCollection = database.collection("users");
@@ -109,11 +113,7 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/about", async (req, res) => {
-  if (!isDbConnected) {
-    return res.status(500).send("Database not connected");
-  }
-
+app.get("/about", checkDbConnection, async (req, res) => {
   try {
     const database = client.db("portfolio");
     const usersCollection = database.collection("users");
@@ -133,11 +133,7 @@ app.get("/about", async (req, res) => {
   }
 });
 
-app.get("/portfolio", async (req, res) => {
-  if (!isDbConnected) {
-    return res.status(500).send("Database not connected");
-  }
-
+app.get("/portfolio", checkDbConnection, async (req, res) => {
   try {
     const database = client.db("portfolio");
     const portfolioCollection = database.collection("portfolio");
@@ -152,11 +148,7 @@ app.get("/portfolio", async (req, res) => {
   }
 });
 
-app.get("/portfolio/:project", async (req, res) => {
-  if (!isDbConnected) {
-    return res.status(500).send("Database not connected");
-  }
-
+app.get("/portfolio/:project", checkDbConnection, async (req, res) => {
   try {
     const { project } = req.params;
     const database = client.db("portfolio");
