@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
 
-const MONGO_URI = process.env.MONGO_URI;
-
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log('Connected to MongoDB successfully');
-  })
-  .catch((error) => {
-    console.log('Error connecting to MongoDB:', error);
-  });
+module.exports = async () => {
+    try {
+        await mongoose.connect(process.env.DB_URL); // No need for deprecated options
+        console.log("✅ CONNECTED TO DATABASE SUCCESSFULLY");
+    } catch (error) {
+        console.error("❌ COULD NOT CONNECT TO DATABASE:", error.message);
+        process.exit(1); // Exit process on failure
+    }
+};
