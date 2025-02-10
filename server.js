@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables
+require("dotenv").config();  // Load environment variables
 
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
@@ -83,6 +83,7 @@ async function connectToDatabase() {
     }
   } catch (err) {
     console.error("❌ MongoDB Connection Error:", err);
+    process.exit(1); // Exit on connection failure
   }
 }
 
