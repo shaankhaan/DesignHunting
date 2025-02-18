@@ -1,9 +1,13 @@
 {
   "version": 2,
   "builds": [
-    { "src": "server.js", "use": "@vercel/node" }
+    { "src": "app.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "server.js" }
-  ]
+    { "src": "/(.*)", "dest": "app.js" }
+  ],
+  "env": {
+    "PORT": "8081", 
+    "DATABASE_URL": "mongodb+srv://portfoliodb:0966750aA1@mybdcluster.6rwyu.mongodb.net/?retryWrites=true&w=majority&appName=mybdcluster"  
+  }
 }
