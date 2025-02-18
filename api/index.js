@@ -7,7 +7,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const session = require("express-session");
 
-const { connectDB } = require("./config/db"); // ✅ Ensure correct import
+const { connectDB } = require("../config/db"); // ✅ Ensure correct import
 const methodOverride = require("method-override");
 const checkDbConnection = require("./middleware/checkDbConnection");
 
