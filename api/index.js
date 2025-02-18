@@ -166,17 +166,11 @@ async function initializeDatabase() {
   }
 }
 
-// **🔹 Start Server**
-const PORT = process.env.PORT || 8081;
-
-// ✅ Ensure MongoDB is initialized before starting the server
-initializeDatabase().then(() => {
-  if (!process.env.VERCEL) {
-    app.listen(PORT, () => {
-      console.log(`🚀 Server is running on http://localhost:${PORT}`);
-    });
-  } else {
-    console.log("✅ Running on Vercel (MongoDB connection handled externally)");
-    module.exports = app;
-  }
-});
+// **🔹 Vercel Serverless Function Export**
+module.exports = (req, res) => {
+  // Ensure MongoDB is initialized before processing requests
+  initializeDatabase().then(() => {
+    // Start Express server logic here
+    app(req, res);
+  });
+};
