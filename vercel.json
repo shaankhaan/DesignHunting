@@ -8,6 +8,6 @@
   ],
   "env": {
     "PORT": "8081", 
-    "DATABASE_URL": "mongodb+srv://portfoliodb:0966750aA1@mybdcluster.6rwyu.mongodb.net/?retryWrites=true&w=majority&appName=mybdcluster"  
+    "DATABASE_URL": "mongodb+srv://portfoliodb:0966750aA1@mybdcluster.6rwyu.mongodb.net/?retryWrites=true&w=majority&appName=mybdcluster"
   }
 }
