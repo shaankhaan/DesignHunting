@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio</title>
-
   <!-- Include AOS (Animate On Scroll) Library -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
@@ -15,17 +14,39 @@
     <h1 style="color: white;">My Portfolio</h1>
   </header>
 
-  <!-- Portfolio Grid -->
-  <div class="portfolio-grid">
-    <% portfolioData.forEach(function(project) { %>
-      <div class="portfolio-item" data-aos="fade-up" data-aos-duration="1000">
-        <img src="<%= project.images[0] %>" alt="<%= project.title %>" class="portfolio-img">
-        <h3><%= project.title %></h3>
-        <p><%= project.description %></p>
-        <a href="<%= project.link %>" class="view-button">View Project</a>
-      </div>
-    <% }) %>
-  </div>
+
+ <!-- Portfolio Grid -->
+<div class="portfolio-grid">
+  <% portfolioData.forEach(function(project) { %>
+    <div class="portfolio-item" data-aos="fade-up" data-aos-duration="1000">
+      <% if (project.images && Array.isArray(project.images) && project.images.length) { %>
+        <img src="<%= project.images[0].trim() %>" alt="<%= project.title %>" class="portfolio-img">
+      <% } else { %>
+        <img src="/default-image.jpg" alt="No Image Available" class="portfolio-img">
+      <% } %>
+      <h3><%= project.title %></h3>
+      <p><%= project.description %></p>
+      <% if (project.link) { %>
+        <% 
+          var link = project.link.trim();
+          // Fix malformed link: if it starts with "https:///" then replace it with "/"
+          if (link.startsWith("https:///")) {
+            link = link.replace("https:///", "/");
+          }
+          var fixedLink;
+          if (link.startsWith('http') || link.startsWith('/')) {
+            fixedLink = link;
+          } else {
+            fixedLink = 'https://' + link;
+          }
+        %>
+        <a href="<%= fixedLink %>" class="view-button">View Project</a>
+      <% } else { %>
+        <small class="text-danger">Invalid URL</small>
+      <% } %>
+    </div>
+  <% }); %>
+</div>
 
   <style>
     .portfolio-grid {
