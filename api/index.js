@@ -171,7 +171,8 @@ initializeDatabase().then(() => {
     });
   } else {
     console.log("✅ Running on Vercel (MongoDB connection handled externally)");
-    module.exports = app;
+    
   }
 });
 
+module.exports = app;
