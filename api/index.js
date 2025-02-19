@@ -7,7 +7,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const session = require("express-session");
 
-const { connectDB } = require("../config/db"); // ✅ Ensure correct import
+const { connectDB } = require("./config/db"); // ✅ Correct path
 const methodOverride = require("method-override");
 const checkDbConnection = require("./middleware/checkDbConnection");
 
@@ -25,7 +25,8 @@ const app = express(); // ✅ Define app at the top
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
-app.use(expressLayouts);
+app.use(expressLayouts()); // ✅ Corrected
+
 app.set("view engine", "ejs");
 app.set("view cache", true); // Enable template caching
 app.use(methodOverride("_method")); // ✅ Enable method override
@@ -45,7 +46,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ Serve Static Files (Optimized with caching)
+// ✅ Serve Static Files (Ensure correct path)
 app.use(express.static(path.join(__dirname, "public"), { maxAge: "1d" })); // 1 day
 
 // **🔹 Register Routes**
@@ -55,12 +56,10 @@ app.use("/", aboutRoutes);
 app.use("/", portfolioRoutes);
 app.use("/", contactRoutes);
 
-// **🔹 Portfolio Page Route (for testing the portfolio view)**
+// **🔹 Portfolio Page Route**
 app.get("/portfolio", async (req, res) => {
   try {
     let portfolioData = await Portfolio.find();
-
-    // 🔹 Ensure images are always arrays (if stored as comma-separated strings)
     portfolioData = portfolioData.map((project) => {
       if (project.images && typeof project.images[0] === "string" && project.images[0].includes(",")) {
         project.images = project.images[0].split(",").map((img) => img.trim());
@@ -79,8 +78,6 @@ app.get("/portfolio", async (req, res) => {
 app.get("/test-db", async (req, res) => {
   try {
     let portfolioItems = await Portfolio.find();
-
-    // 🔹 Fix image array format if needed
     portfolioItems = portfolioItems.map((item) => {
       if (item.images && typeof item.images[0] === "string" && item.images[0].includes(",")) {
         item.images = item.images[0].split(",").map((img) => img.trim());
@@ -101,6 +98,7 @@ async function initializeDatabase() {
   try {
     await connectDB();
     console.log("✅ MongoDB Connected!");
+
     const db = mongoose.connection.db;
     const usersCollection = db.collection("users");
     const portfolioCollection = db.collection("portfolio");
@@ -147,30 +145,18 @@ async function initializeDatabase() {
         },
       ]);
       console.log("✅ Inserted sample portfolio data.");
-    } else {
-      // 🔹 Fix image array format in database if needed
-      const portfolios = await portfolioCollection.find().toArray();
-      portfolios.forEach(async (project) => {
-        if (project.images && typeof project.images[0] === "string" && project.images[0].includes(",")) {
-          const updatedImages = project.images[0].split(",").map((img) => img.trim());
-          await portfolioCollection.updateOne(
-            { _id: project._id },
-            { $set: { images: updatedImages } }
-          );
-          console.log(`✅ Fixed image array for: ${project.title}`);
-        }
-      });
     }
   } catch (error) {
     console.error("❌ Error inserting/updating sample data:", error);
   }
 }
 
-// **🔹 Vercel Serverless Function Export**
-module.exports = (req, res) => {
-  // Ensure MongoDB is initialized before processing requests
-  initializeDatabase().then(() => {
-    // Start Express server logic here
-    app(req, res);
+// **🔹 Start Express Server**
+initializeDatabase()
+  .then(() => {
+    const PORT = process.env.PORT || 8081;
+    app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error("❌ Failed to start server:", err);
   });
-};
