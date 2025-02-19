@@ -75,26 +75,26 @@ app.get("/portfolio", async (req, res) => {
   }
 });
 
+// **🔹 Test Database Route**
 app.get("/test-db", async (req, res) => {
   try {
-    console.log("✅ Checking database connection...");
-    const portfolioItems = await Portfolio.find();
+    let portfolioItems = await Portfolio.find();
 
-    // ✅ Ensure images are properly formatted
-    portfolioItems.forEach((item) => {
+    // 🔹 Fix image array format if needed
+    portfolioItems = portfolioItems.map((item) => {
       if (item.images && typeof item.images[0] === "string" && item.images[0].includes(",")) {
         item.images = item.images[0].split(",").map((img) => img.trim());
       }
+      return item;
     });
 
-    console.log("✅ Portfolio Data Sent:", portfolioItems);
-    res.status(200).json(portfolioItems);
+    console.log("✅ Fetched portfolio data:", portfolioItems);
+    res.send(portfolioItems);
   } catch (error) {
-    console.error("❌ Error fetching portfolio data:", error);
-    res.status(500).json({ error: "Database error", details: error.message });
+    console.error("❌ Error fetching portfolio:", error);
+    res.status(500).send("Database error");
   }
 });
-
 
 // **🔹 Connect to MongoDB and Seed Sample Data**
 async function initializeDatabase() {

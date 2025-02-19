@@ -1,23 +1,31 @@
 const mongoose = require("mongoose");
 
+let database = null;
+
 const connectDB = async () => {
+  if (database) {
+    console.log("ℹ️ Using existing MongoDB connection.");
+    return database; // Return existing connection
+  }
+
   try {
-    if (!process.env.MONGO_URI) {
-      throw new Error("MONGO_URI is missing in environment variables");
-    }
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    database = mongoose.connection; // ✅ Store actual connection instance
 
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s
-      socketTimeoutMS: 45000, // Close idle connections
-    });
-
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(`✅ MongoDB Connected! Database: ${database.name}`);
+    return database;
   } catch (error) {
-    console.error(`❌ MongoDB Connection Error: ${error.message}`);
+    console.error("❌ MongoDB Connection Error:", error);
     process.exit(1);
   }
 };
 
-module.exports = connectDB;
+// ✅ Function to get the active database connection
+const getDb = () => {
+  if (!database) {
+    throw new Error("❌ Database not initialized. Call connectDB() first.");
+  }
+  return database.db; // ✅ Correctly return `db`
+};
+
+module.exports = { connectDB, getDb };
