@@ -6,6 +6,7 @@ const compression = require("compression");
 const path = require("path");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 
 const { connectDB } = require("../config/db"); // ✅ Correct import
 const methodOverride = require("method-override");
@@ -26,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 app.use(expressLayouts);
 app.set("view engine", "ejs");
-app.set("view cache", true); // Enable template caching
+app.set("view cache", true);
 app.use(methodOverride("_method"));
 
 // ✅ Session Management (Replaces MemoryStore in Production)
@@ -37,7 +38,6 @@ const sessionConfig = {
 };
 
 if (process.env.NODE_ENV === "production") {
-  const MongoStore = require("connect-mongo");
   sessionConfig.store = MongoStore.create({
     mongoUrl: process.env.MONGO_URI,
     collectionName: "sessions",
@@ -85,17 +85,8 @@ app.get("/portfolio", async (req, res) => {
 app.get("/test-db", async (req, res) => {
   try {
     let portfolioItems = await Portfolio.find();
-
-    // 🔹 Ensure images are stored as an array
-    portfolioItems = portfolioItems.map((item) => {
-      if (item.images && typeof item.images[0] === "string" && item.images[0].includes(",")) {
-        item.images = item.images[0].split(",").map((img) => img.trim());
-      }
-      return item;
-    });
-
     console.log("✅ Fetched portfolio data:", portfolioItems);
-    res.send(portfolioItems);
+    res.json(portfolioItems);
   } catch (error) {
     console.error("❌ Error fetching portfolio:", error);
     res.status(500).send("Database error");
@@ -171,8 +162,10 @@ initializeDatabase().then(() => {
     });
   } else {
     console.log("✅ Running on Vercel (MongoDB connection handled externally)");
-    
   }
 });
 
-module.exports = app;
+// **✅ Fix: Export for Vercel**
+module.exports = (req, res) => {
+  app(req, res);
+};
