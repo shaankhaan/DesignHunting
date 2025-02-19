@@ -175,4 +175,6 @@ initializeDatabase().then(() => {
   }
 });
 
-module.exports = app;
+module.exports = (req, res) => {
+  app(req, res);
+};
