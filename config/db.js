@@ -1,17 +1,31 @@
 const mongoose = require("mongoose");
 
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+let database = null;
 
-    console.log(`✅ MongoDB Connected! Database: ${conn.connection.name}`);
+const connectDB = async () => {
+  if (database) {
+    console.log("ℹ️ Using existing MongoDB connection.");
+    return database; // Return existing connection
+  }
+
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    database = mongoose.connection; // ✅ Store actual connection instance
+
+    console.log(`✅ MongoDB Connected! Database: ${database.name}`);
+    return database;
   } catch (error) {
-    console.error("❌ MongoDB Connection Failed:", error);
+    console.error("❌ MongoDB Connection Error:", error);
     process.exit(1);
   }
 };
 
-module.exports = connectDB;  // ✅ Make sure it's properly exported
+// ✅ Function to get the active database connection
+const getDb = () => {
+  if (!database) {
+    throw new Error("❌ Database not initialized. Call connectDB() first.");
+  }
+  return database.db; // ✅ Correctly return `db`
+};
+
+module.exports = { connectDB, getDb };
