@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
-const { connectDB } = require("../config/db"); // ✅ Correct import
+const connectDB = require("../config/db");  // ✅ Correct import
 const methodOverride = require("method-override");
 
 // ✅ Import Routes
@@ -18,6 +18,7 @@ const aboutRoutes = require("../routes/aboutRoutes");
 const portfolioRoutes = require("../routes/portfolioRoutes");
 const contactRoutes = require("../routes/contactRoutes");
 const Portfolio = require("../models/Portfolio");
+connectDB();
 
 const app = express(); // ✅ Define Express app
 
