@@ -13,9 +13,9 @@
     }
   ],
   "env": {
-    "MONGO_URI": "@MONGO_URI",
-    "CLOUDINARY_CLOUD_NAME": "@CLOUDINARY_CLOUD_NAME",
-    "CLOUDINARY_API_KEY": "@CLOUDINARY_API_KEY",
-    "CLOUDINARY_API_SECRET": "@CLOUDINARY_API_SECRET"
+    "MONGO_URI": "mongodb+srv://portfoliodb:0966750aA1@mybdcluster.6rwyu.mongodb.net/?retryWrites=true&w=majority&appName=mybdcluster",
+    "CLOUDINARY_CLOUD_NAME": "my-cloud",
+    "CLOUDINARY_API_KEY": "654331792966272",
+    "CLOUDINARY_API_SECRET": "0Ln5dEC2KUfLHZ35wZ4rE2zcDTo"
   }
 }
