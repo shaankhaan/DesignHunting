@@ -5,12 +5,16 @@ let database = null;
 const connectDB = async () => {
   if (database) {
     console.log("ℹ️ Using existing MongoDB connection.");
-    return database; // Return existing connection
+    return database; // ✅ Return existing connection
   }
 
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    database = mongoose.connection; // ✅ Store actual connection instance
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    database = conn.connection; // ✅ Store actual connection instance
 
     console.log(`✅ MongoDB Connected! Database: ${database.name}`);
     return database;
@@ -25,7 +29,7 @@ const getDb = () => {
   if (!database) {
     throw new Error("❌ Database not initialized. Call connectDB() first.");
   }
-  return database.db; // ✅ Correctly return `db`
+  return database; // ✅ Correctly return Mongoose connection
 };
 
 module.exports = { connectDB, getDb };

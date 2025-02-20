@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
-const connectDB = require("../config/db");  // ✅ Correct import
+const { connectDB } = require("../config/db"); // ✅ Correct import
 const methodOverride = require("method-override");
 
 // ✅ Import Routes
@@ -18,7 +18,6 @@ const aboutRoutes = require("../routes/aboutRoutes");
 const portfolioRoutes = require("../routes/portfolioRoutes");
 const contactRoutes = require("../routes/contactRoutes");
 const Portfolio = require("../models/Portfolio");
-connectDB();
 
 const app = express(); // ✅ Define Express app
 
@@ -66,15 +65,6 @@ app.use("/", contactRoutes);
 app.get("/portfolio", async (req, res) => {
   try {
     let portfolioData = await Portfolio.find();
-
-    // 🔹 Ensure images are always arrays (if stored as comma-separated strings)
-    portfolioData = portfolioData.map((project) => {
-      if (project.images && typeof project.images[0] === "string" && project.images[0].includes(",")) {
-        project.images = project.images[0].split(",").map((img) => img.trim());
-      }
-      return project;
-    });
-
     res.render("portfolio", { portfolioData });
   } catch (error) {
     console.error("❌ Error fetching portfolio data:", error);
@@ -167,6 +157,4 @@ initializeDatabase().then(() => {
 });
 
 // **✅ Fix: Export for Vercel**
-module.exports = (req, res) => {
-  app(req, res);
-};
+module.exports = app;
