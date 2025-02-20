@@ -1,5 +1,5 @@
-require("dotenv").config(); // ✅ Load environment variables
-
+require("dotenv").config({ path: ".env.local" });
+console.log("✅ Loaded MONGO_URI:", process.env.MONGO_URI);
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const compression = require("compression");
