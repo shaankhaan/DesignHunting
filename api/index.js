@@ -1,3 +1,4 @@
+// index.js
 require("dotenv").config();
 console.log("✅ Loaded MONGO_URI:", process.env.MONGO_URI);
 
@@ -23,7 +24,6 @@ const homeRoutes = require("../routes/homeRoutes");
 const aboutRoutes = require("../routes/aboutRoutes");
 const portfolioRoutes = require("../routes/portfolioRoutes");
 const contactRoutes = require("../routes/contactRoutes");
-const Portfolio = require("../models/Portfolio");
 
 const app = express(); // ✅ Define Express app
 
@@ -70,7 +70,7 @@ app.use("/", contactRoutes);
 // **🔹 Portfolio Page Route**
 app.get("/portfolio", async (req, res) => {
   try {
-    let portfolioData = await Portfolio.find();
+    let portfolioData = await mongoose.connection.collection("portfolio").find().toArray();
     res.render("portfolio", { portfolioData });
   } catch (error) {
     console.error("❌ Error fetching portfolio data:", error);
@@ -78,83 +78,10 @@ app.get("/portfolio", async (req, res) => {
   }
 });
 
-// **🔹 Test Database Route**
-app.get("/test-db", async (req, res) => {
-  try {
-    let portfolioItems = await Portfolio.find();
-    console.log("✅ Fetched portfolio data:", portfolioItems);
-    res.json(portfolioItems);
-  } catch (error) {
-    console.error("❌ Error fetching portfolio:", error);
-    res.status(500).send("Database error");
-  }
-});
-
-// **🔹 Connect to MongoDB and Seed Sample Data**
-async function initializeDatabase() {
-  try {
-    await connectDB();
-    console.log("✅ MongoDB Connected!");
-
-    const db = mongoose.connection;
-
-    // Check & insert/update portfolio and user data
-    const usersCollection = db.collection("users");
-    const portfolioCollection = db.collection("portfolio");
-
-    // ✅ Insert sample user data if missing
-    const userExists = await usersCollection.findOne({ name: "Shan Khan" });
-    if (!userExists) {
-      await usersCollection.insertOne({ name: "Shan Khan", profession: "Graphic Designer" });
-      console.log("✅ Inserted sample user data.");
-    }
-
-    // ✅ Check & insert/update portfolio data
-    const existingPortfolio = await portfolioCollection.findOne({ title: "Thumbnails Projects" });
-    if (!existingPortfolio) {
-      await portfolioCollection.insertMany([
-        {
-          title: "Thumbnails Projects",
-          description: "A collection of thumbnail designs.",
-          link: "/portfolio/thumbnails",
-          images: [
-            "/images/thumb1.png",
-            "/images/thumb2.jpg",
-            "/images/thumbnail_edit.jpg",
-            "/images/property.jpg",
-          ],
-        },
-        {
-          title: "Crafting of My Mushroom",
-          description: "An illustration project for a Mushroom visual concept.",
-          link: "/portfolio/mushroom-logo",
-          images: [
-            "/images/mushroom_edit.png",
-            "/images/grapes_edit11.png",
-            "/images/floral_edit_v03.png",
-            "/images/Wolf_edit.png",
-            "/images/EcoScape_edit.png",
-          ],
-        },
-        {
-          title: "Web Development",
-          description: "A full-stack web development project.",
-          link: "/portfolio/web-development",
-          images: ["/images/website.jpg", "/images/wireframe.jpg"],
-        },
-      ]);
-      console.log("✅ Inserted sample portfolio data.");
-    }
-  } catch (error) {
-    console.error("❌ Error inserting/updating sample data:", error);
-  }
-}
-
 // **🔹 Start Server**
 const PORT = process.env.PORT || 8081;
 
-// ✅ Ensure MongoDB is initialized before starting the server
-initializeDatabase().then(() => {
+connectDB().then(() => {
   if (!process.env.VERCEL) {
     app.listen(PORT, () => {
       console.log(`🚀 Server is running on http://localhost:${PORT}`);
@@ -166,3 +93,4 @@ initializeDatabase().then(() => {
 
 // **✅ Fix: Export for Vercel**
 module.exports = app;
+
